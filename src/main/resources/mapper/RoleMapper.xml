@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zw.dao.RoleDao">
+    <resultMap id="role" type="zw.pojo.Role">
+        <!-- 通过使用resultMap元素自定义结果映射，该元素内部的id和result提供了javaType、jdbcType、typeHandler属性满足类型要求 -->
+        <!-- 通过id元素映射主键类型 -->
+        <!-- 通过result元素映射非主键类型 -->
+        <result column="create_time" property="createTime"/>
+        <!-- 当字段名和属性名一致是，可写可不写 -->
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <!--根据用户名和密码查询用户  -->
+    <select id="getAllRoleList" resultMap="role">
+        select * from ta_role order by create_time desc
+        <if test="params!=null and params.offset!=null and params.offset!=''">
+            limit #{params.offset},#{param.limit}
+        </if>
+    </select>
+</mapper>

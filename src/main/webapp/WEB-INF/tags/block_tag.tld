@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>tmpl</short-name>
+    <!-- 定义第一个标签 -->
+    <tag>
+        <!-- 定义标签名 -->
+        <name>block</name>
+        <!-- 定义标签处理类 -->
+        <tag-class>zw.tags.BlockTag</tag-class>
+        <!-- 定义标签体为空 -->
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+        </attribute>
+    </tag>
+    <!-- 定义第一个标签 -->
+    <tag>
+        <!-- 定义标签名 -->
+        <name>overwrite</name>
+        <!-- 定义标签处理类 -->
+        <tag-class>zw.tags.OverwriteTag</tag-class>
+        <!-- 定义标签体不为空 -->
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+        </attribute>
+    </tag>
+    <tag>
+        <!-- 定义标签名 -->
+        <name>toolbar</name>
+        <!-- 定义标签处理类 -->
+        <tag-class>zw.tags.ToolBar</tag-class>
+        <!-- 定义标签体为空 -->
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>dataid</name>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>url</name>
+            <required>true</required>
+        </attribute>
+    </tag>
+</taglib>

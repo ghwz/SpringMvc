@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 自动扫描装配 -->
+    <context:component-scan base-package="zw"/>
+
+    <!-- 引入配置文件 -->
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:jdbc.properties" />
+    </bean>
+
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close"
+          p:driverClass="${jdbc.driver}"
+          p:jdbcUrl="${jdbc.url}"
+          p:user="${jdbc.username}"
+          p:password="${jdbc.password}"
+          p:idleConnectionTestPeriod="${jdbc.idleConnectionTestPeriod}"
+          p:maxIdleTime="${jdbc.maxIdleTime}"
+          p:acquireIncrement="${jdbc.acquireIncrement}"
+          p:initialPoolSize="${jdbc.initialPoolSize}"
+          p:maxPoolSize="${jdbc.maxPoolSize}"
+          p:minPoolSize="${jdbc.minPoolSize}"
+          p:autoCommitOnClose="${jdbc.autoCommitOnClose}"
+          p:checkoutTimeout="${jdbc.checkoutTimeout}"
+          p:acquireRetryAttempts="${jdbc.acquireRetryAttempts}"
+          p:preferredTestQuery="SELECT 1"
+          p:maxConnectionAge="3000"/>
+
+    <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <!-- 自动扫描mapping.xml文件 -->
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"></property>
+    </bean>
+
+    <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="zw.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <!--验证码-->
+    <bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+        <property name="config">
+            <bean class="com.google.code.kaptcha.util.Config">
+                <constructor-arg>
+                    <props>
+                        <!-- 验证码宽度 -->
+                        <prop key="kaptcha.image.width">110</prop>
+                        <!-- 验证码高度 -->
+                        <prop key="kaptcha.image.height">50</prop>
+                        <!-- 生成验证码内容范围 -->
+                        <prop key="kaptcha.textproducer.char.string">0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ</prop>
+                        <!-- 验证码个数 -->
+                        <prop key="kaptcha.textproducer.char.length">3</prop>
+                        <!-- 是否有边框 -->
+                        <prop key="kaptcha.border">no</prop>
+                        <!-- 边框颜色 -->
+                        <prop key="kaptcha.border.color">105,179,90</prop>
+                        <!-- 边框厚度 -->
+                        <prop key="kaptcha.border.thickness">1</prop>
+                        <!-- 验证码字体颜色 -->
+                        <prop key="kaptcha.textproducer.font.color">black</prop>
+                        <!-- 验证码字体大小 -->
+                        <prop key="kaptcha.textproducer.font.size">30</prop>
+                        <!-- 验证码所属字体样式 -->
+                        <prop key="kaptcha.textproducer.font.names">楷体</prop>
+                        <!-- 干扰线颜色 -->
+                        <prop key="kaptcha.noise.color">black</prop>
+                        <!-- 验证码文本字符间距 -->
+                        <prop key="kaptcha.textproducer.char.space">3</prop>
+                        <!-- 图片样式 :阴影-->
+                        <prop key="kaptcha.obscurificator.impl">com.google.code.kaptcha.impl.ShadowGimpy</prop>
+                    </props>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+</beans>

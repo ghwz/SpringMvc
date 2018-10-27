@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zw.dao.AuthRuleDao">
+    <resultMap id="authRule" type="zw.pojo.AuthRule">
+        <result column="rule_val" property="ruleVal"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="delete_time" property="deleteTime"/>
+    </resultMap>
+    <!--根据用户名和密码查询用户  -->
+    <select id="getLevelData" resultMap="authRule">
+        select * from ta_auth_rule where delete_time is null
+        <if test="rule_ids!=null and rule_ids!=''">
+            and id in
+            <foreach item="item" index="index" collection="rule_ids" open="("
+                     separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by pid asc;
+    </select>
+</mapper>
